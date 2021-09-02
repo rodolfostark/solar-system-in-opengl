@@ -10,14 +10,24 @@ void init(void) {
 }
 
 void display(void) {
+  GLUquadricObj *sun = NULL;
+  sun = gluNewQuadric();
+  GLUquadricObj *earth = NULL;
+  earth = gluNewQuadric();
+  GLUquadricObj *moon = NULL;
+  moon = gluNewQuadric();
+
   glClear(GL_COLOR_BUFFER_BIT);
   glColor3f(1.0, 1.0, 1.0);
   glPushMatrix();
-  glutSolidSphere(1.0, 200, 160); /* draw sun */
+  gluSphere(sun, 1.0, 200, 160); /* draw sun */
   glRotatef((GLfloat)year, 0.0, 1.0, 0.0);
-  glTranslatef(2.0, 0.0, 0.0);
+  glTranslatef(3.0, 0.0, 0.0);
   glRotatef((GLfloat)day, 0.0, 1.0, 0.0);
-  glutSolidSphere(0.2, 100, 80); /* draw smaller planet */
+  gluSphere(earth, 0.2, 100, 80); /* draw earth planet */
+  glTranslatef(0.5, 0.0, 0.0);
+  glRotatef((GLfloat)day * 2, 0.0, 1.0, 0.0);
+  gluSphere(moon, 0.05, 100, 80); /* draw moon planet */
   glPopMatrix();
   glutSwapBuffers();
 }
