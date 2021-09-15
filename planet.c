@@ -122,7 +122,7 @@ void reshape(int w, int h)
   gluPerspective(120.0, (GLfloat)w / (GLfloat)h, 2.0, 550.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0, 8.0, 12.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0);
+  gluLookAt(6.0, 6.0, 6.0, 0.0, 3.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 void keyboard(unsigned char key, int x, int y) {
@@ -151,8 +151,8 @@ void keyboard(unsigned char key, int x, int y) {
 void idle()
 {
   glutPostRedisplay();
-  day = (day + 10) % 360;
-  year = (year + 5) % 360;
+  day = (day + 10);
+  year = (year + 5);
 }
 
 int main(int argc, char **argv) 
