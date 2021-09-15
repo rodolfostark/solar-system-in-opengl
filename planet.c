@@ -147,6 +147,12 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
+void idle(){
+  day = (day + 10) % 360;
+  year = (year + 5) % 360;
+  glutPostRedisplay();
+}
+
 int main(int argc, char **argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -158,6 +164,7 @@ int main(int argc, char **argv) {
   // glutDisplayFunc(displaySecondSet);
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);
+  glutIdleFunc(idle);
   glutMainLoop();
   return 0;
 }
