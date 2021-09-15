@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 
 static int year = 0, day = 0;
+
 #define earth_size 0.1
 #define earth_distance 3
 
@@ -21,7 +22,8 @@ float mercury_distance = earth_distance * 0.39,
       neptune_distance = earth_distance * 30.06,
       pluto_distance = earth_distance * 40;
 
-void init(void) {
+void init(void)
+{
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_FLAT);
 }
@@ -51,19 +53,20 @@ void stars(void) {
 
 void renderPlanet(GLUquadricObj *planet, float size, float translateX,
                   float translateY, float translateZ, float rotationAngle,
-                  float rotationX, float rotationY, float rotationZ) {
+                  float rotationX, float rotationY, float rotationZ, float yearRateFromEarth) 
+{
   glPopMatrix();
   glPushMatrix();
 
-  glRotatef((GLfloat)year, 0.0, 1.0, 0.0);
+  glRotatef((GLfloat) year * yearRateFromEarth, 0.0, 1.0, 0.0);
   glTranslatef(translateX, translateY, translateZ);
-  glRotatef((GLfloat)year * rotationAngle, rotationX, rotationY, rotationZ);
+  glRotatef((GLfloat) year * yearRateFromEarth * rotationAngle, rotationX, rotationY, rotationZ);
   gluSphere(planet, size, 100, 80); /* draw mars planet */
 }
 
-void displayFirstSet(void) {
+void displayFirstSet(void) 
+{
   // stars();
-
   GLUquadricObj *sun = NULL;
   sun = gluNewQuadric();
   GLUquadricObj *mercury = NULL;
@@ -93,35 +96,33 @@ void displayFirstSet(void) {
   glPushMatrix();
 
   gluSphere(sun, 1.0, 200, 160);           /* draw sun */
-  glRotatef((GLfloat)year, 0.0, 1.0, 0.0); // rotate sun
-  renderPlanet(mercury, mercury_size, mercury_distance, 1.0, 0.0, 2, 0.0, 1.0,
-               0.0);
-  renderPlanet(venus, venus_size, venus_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0);
-  renderPlanet(earth, earth_size, earth_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0);
+  glRotatef((GLfloat) year, 0.0, 1.0, 0.0); // rotate sun
+  renderPlanet(mercury, mercury_size, mercury_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 4.0);
+  renderPlanet(venus, venus_size, venus_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 1.6);
+  renderPlanet(earth, earth_size, earth_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 1.0);
   // **** Render Mars****
-  renderPlanet(mars, mars_size, mars_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0);
-  renderPlanet(jupiter, jupiter_size, jupiter_distance, 1.0, 0.0, 2, 0.0, 1.0,
-               0.0);
+  renderPlanet(mars, mars_size, mars_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 0.5);
+  renderPlanet(jupiter, jupiter_size, jupiter_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 0.08);
   renderPlanet(saturn, saturn_size, saturn_distance, 1.0, 0.0, 2, 0.0, 1.0,
-               0.0);
+               0.0, 0.03);
   renderPlanet(uranus, uranus_size, uranus_distance, 1.0, 0.0, 2, 0.0, 1.0,
-               0.0);
+               0.0, 0.01);
   renderPlanet(neptune, neptune_size, neptune_distance, 1.0, 0.0, 2, 0.0, 1.0,
-               0.0);
-  renderPlanet(pluto, pluto_size, pluto_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0);
-
+               0.0, 0.006);
+  renderPlanet(pluto, pluto_size, pluto_distance, 1.0, 0.0, 2, 0.0, 1.0, 0.0, 0.004);
   glPopMatrix();
   glutSwapBuffers();
 }
 
-void reshape(int w, int h) {
+void reshape(int w, int h) 
+{
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(120.0, (GLfloat)w / (GLfloat)h, 2.0, 550.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0);
+  gluLookAt(0.0, 8.0, 12.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0);
 }
 
 void keyboard(unsigned char key, int x, int y) {
@@ -147,23 +148,23 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-void idle(){
+void idle()
+{
+  glutPostRedisplay();
   day = (day + 10) % 360;
   year = (year + 5) % 360;
-  glutPostRedisplay();
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-  glutInitWindowSize(1000, 700);
+  glutInitWindowSize(1270, 720);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
   init();
   glutDisplayFunc(displayFirstSet);
-  // glutDisplayFunc(displaySecondSet);
   glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
   glutIdleFunc(idle);
   glutMainLoop();
   return 0;
